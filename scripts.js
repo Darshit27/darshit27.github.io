@@ -1,20 +1,19 @@
-function showSection(sectionId) {
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        if (section.id === sectionId) {
-            section.classList.add('show');
-        } else {
-            section.classList.remove('show');
+document.addEventListener("DOMContentLoaded", function () {
+    const quote = document.querySelector('.quote');
+    const aboutSection = document.querySelector('#about');
+
+    window.addEventListener('scroll', () => {
+        const scrollPosition = window.scrollY;
+
+        // Show quote after scrolling a bit
+        if (scrollPosition > 200) {
+            quote.classList.add('show');
+        }
+
+        // Show about section with fade in transition after scrolling more
+        if (scrollPosition > (aboutSection.offsetTop - window.innerHeight / 2)) {
+            aboutSection.classList.remove('hide');
+            aboutSection.classList.add('show');
         }
     });
-
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        if (tab.innerText.toLowerCase() === sectionId) {
-            tab.classList.add('active');
-        } else {
-            tab.classList.remove('active');
-        }
-    });
-}
-
+});
