@@ -28,6 +28,24 @@
         p {
             margin: 10px 0;
         }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            margin-right: 20px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+        .tab.active {
+            background-color: #ccc;
+        }
     </style>
 </head>
 
@@ -36,9 +54,14 @@
     <div class="container">
         <header>
             <h1>Darshit Darji</h1>
+            <div class="tabs">
+                <div class="tab active" onclick="showSection('about')">About Me</div>
+                <div class="tab" onclick="showSection('projects')">Projects</div>
+                <div class="tab" onclick="showSection('contact')">Contact</div>
+            </div>
         </header>
 
-        <section>
+        <section id="about">
             <h2>About Me</h2>
             <p>
                 As a passionate Electronics Engineer, I have extensive experience in the field of electronics and robotics.
@@ -52,7 +75,39 @@
                 electronics and robotics, will enable me to achieve bigger milestones.
             </p>
         </section>
+
+        <section id="projects" style="display: none;">
+            <h2>Projects</h2>
+            <!-- Add your projects here -->
+        </section>
+
+        <section id="contact" style="display: none;">
+            <h2>Contact</h2>
+            <!-- Add your contact information here -->
+        </section>
     </div>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                if (tab.innerText.toLowerCase() === sectionId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+    </script>
 
 </body>
 
