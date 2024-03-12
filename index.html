@@ -6,57 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darshit Darji - Electronics Engineer</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #121212;
-            color: #fff;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #1f1f1f;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        h1,
-        h2,
-        p {
-            margin: 10px 0;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            margin-right: 20px;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            background-color: #333;
-            transition: background-color 0.3s ease;
-        }
-
-        .tab.active {
-            background-color: #555;
-        }
-
-        section {
-            display: none;
-        }
-
-        section.show {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -97,28 +47,7 @@
         </section>
     </div>
 
-    <script>
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                if (section.id === sectionId) {
-                    section.classList.add('show');
-                } else {
-                    section.classList.remove('show');
-                }
-            });
-
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                if (tab.innerText.toLowerCase() === sectionId) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
-        }
-    </script>
-
+    <script src="scripts.js"></script>
 </body>
 
 </html>
