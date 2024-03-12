@@ -5,23 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darshit Darji - Electronics Engineer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Darshit Darji</h1>
-            <div class="tabs">
-                <div class="tab active" onclick="showSection('about')">About Me</div>
-                <div class="tab" onclick="showSection('projects')">Projects</div>
-                <div class="tab" onclick="showSection('contact')">Contact</div>
-            </div>
-        </header>
+    <div class="landing">
+        <div class="landing-content">
+            <h1 class="name">Darshit Darji</h1>
+            <img src="your-photo.jpg" alt="Your Photo" class="photo">
+        </div>
+        <p class="quote">Frequency is magic</p>
+    </div>
 
-        <section class="show" id="about">
+    <div class="container">
+        <section id="about" class="hide">
             <h2>About Me</h2>
             <p>
                 As a passionate Electronics Engineer, I have extensive experience in the field of electronics and robotics.
@@ -34,16 +33,6 @@
                 contributions to the field and I believe that my previous experiences, combined with my strong foundation in
                 electronics and robotics, will enable me to achieve bigger milestones.
             </p>
-        </section>
-
-        <section id="projects">
-            <h2>Projects</h2>
-            <!-- Add your projects here -->
-        </section>
-
-        <section id="contact">
-            <h2>Contact</h2>
-            <!-- Add your contact information here -->
         </section>
     </div>
 
