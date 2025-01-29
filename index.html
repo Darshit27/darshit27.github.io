@@ -58,8 +58,8 @@
     function dropBalls() {
         for (let i = 0; i < 500; i++) {
             let ball = Bodies.circle(width / 2, 10, 5, {
-                restitution: 0.6,
-                friction: 0.05,
+                restitution: 1.0,
+                friction: 0.02,
                 render: { fillStyle: "white" }
             });
             balls.push(ball);
