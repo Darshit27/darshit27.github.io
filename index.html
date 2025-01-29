@@ -72,7 +72,7 @@
         const acceleration = event.accelerationIncludingGravity;
         if (acceleration) {
             engine.world.gravity.x = acceleration.x / 5;
-            engine.world.gravity.y = acceleration.y / 5;
+            engine.world.gravity.y = -acceleration.y / 5;
         }
     }
 
