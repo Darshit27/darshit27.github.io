@@ -1,42 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Darshit Darji - Electronics Engineer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        body { margin: 0; overflow: hidden; background: #f0f0f0; }
+        canvas { display: block; }
+        #dynamic-island {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 35px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 2;
+        }
+    </style>
 </head>
-
 <body>
+    <div id="dynamic-island"></div>
+    <canvas id="canvas"></canvas>
 
-    <div class="landing">
-        <div class="landing-content">
-            <h1 class="name">Darshit Darji</h1>
-            <img src="your-photo.jpg" alt="Your Photo" class="photo">
-        </div>
-        <p class="quote">Frequency is magic</p>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    <script>
+        const Engine = Matter.Engine,
+            Render = Matter.Render,
+            World = Matter.World,
+            Bodies = Matter.Bodies,
+            Body = Matter.Body;
 
-    <div class="container">
-        <section id="about" class="hide">
-            <h2>About Me</h2>
-            <p>
-                As a passionate Electronics Engineer, I have extensive experience in the field of electronics and robotics.
-                I have developed my skills through project‑based learning, competitions, internships, and research. I have worked
-                on projects like a quadcopter and a CNC plotter, led a team to create an underwater robot, and taught CAD and
-                PCB design to students and faculties. I have completed my major project at the Indian Space Research Organization
-                (ISRO), where I worked on electronics and dashboard software development for closed‑loop control of a hexapod
-                mechanism used in a space telescope. Currently, I am working at Indian Institute of Science (IISc) as a Project
-                Associate focused on developing hardware of legged robotic platforms. I am committed to making meaningful
-                contributions to the field and I believe that my previous experiences, combined with my strong foundation in
-                electronics and robotics, will enable me to achieve bigger milestones.
-            </p>
-        </section>
-    </div>
+        const engine = Engine.create();
+        const canvas = document.getElementById('canvas');
+        const render = Render.create({
+            element: document.body,
+            engine: engine,
+            canvas: canvas,
+            options: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                wireframes: false,
+                background: 'transparent'
+            }
+        });
 
-    <script src="scripts.js"></script>
+        // Physics setup
+        engine.world.gravity.y = 0; // We'll handle custom gravity
+        const walls = createWalls();
+        World.add(engine.world, walls);
+
+        // Dynamic Island obstacle
+        const island = Bodies.rectangle(
+            window.innerWidth/2, 50,
+            120, 35,
+            {
+                isStatic: true,
+                chamfer: { radius: 15 },
+                render: { fillStyle: '#000000' }
+            }
+        );
+        World.add(engine.world, island);
+
+        // Ball creation
+        let balls = [];
+        const createBall = (x, y) => {
+            return Bodies.circle(x, y, 8, {
+                restitution: 0.6,
+                friction: 0.1,
+                density: 0.04,
+                render: {
+                    fillStyle: '#FFD700'
+                }
+            });
+        };
+
+        // Initial drop
+        let ballsDropped = 0;
+        const dropInterval = setInterval(() => {
+            if(ballsDropped < 50) {
+                const ball = createBall(window.innerWidth/2, -20);
+                balls.push(ball);
+                World.add(engine.world, ball);
+                ballsDropped++;
+            } else {
+                clearInterval(dropInterval);
+            }
+        }, 100);
+
+        // Device motion handling
+        let beta = 0;
+        let gamma = 0;
+
+        window.addEventListener('deviceorientation', (e) => {
+            beta = e.beta;  // Front/back tilt (y-axis)
+            gamma = e.gamma; // Left/right tilt (x-axis)
+        });
+
+        // Physics update
+        Matter.Events.on(engine, 'beforeUpdate', () => {
+            const gravityScale = 0.5;
+            
+            balls.forEach(ball => {
+                // Apply custom gravity based on device orientation
+                Body.applyForce(ball, ball.position, {
+                    x: Math.sin(gamma * Math.PI / 180) * gravityScale,
+                    y: Math.sin(beta * Math.PI / 180) * gravityScale
+                });
+            });
+        });
+
+        // Walls creation
+        function createWalls() {
+            return [
+                Bodies.rectangle(0, window.innerHeight/2, 2, window.innerHeight, { // Left
+                    isStatic: true, render: { visible: false }
+                }),
+                Bodies.rectangle(window.innerWidth, window.innerHeight/2, 2, window.innerHeight, { // Right
+                    isStatic: true, render: { visible: false }
+                }),
+                Bodies.rectangle(window.innerWidth/2, window.innerHeight, window.innerWidth, 2, { // Bottom
+                    isStatic: true, render: { visible: false }
+                })
+            ];
+        }
+
+        // Start the engine
+        Engine.run(engine);
+        Render.run(render);
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            render.options.width = window.innerWidth;
+            render.options.height = window.innerHeight;
+        });
+    </script>
 </body>
-
 </html>
