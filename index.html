@@ -18,76 +18,83 @@
 </head>
 <body>
     <script>
-        const { Engine, Render, Runner, Bodies, World, Events } = Matter;
+    const { Engine, Render, Runner, Bodies, World, Events } = Matter;
 
-        // Create engine and world
-        const engine = Engine.create();
-        const world = engine.world;
+    const engine = Engine.create();
+    const world = engine.world;
 
-        // Create renderer
-        const render = Render.create({
-            element: document.body,
-            engine: engine,
-            options: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                wireframes: false,
-                background: "black"
-            }
-        });
-
-        Render.run(render);
-        const runner = Runner.create();
-        Runner.run(runner, engine);
-
-        // Screen dimensions
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        // Create jar boundaries
-        const walls = [
-            Bodies.rectangle(width / 2, height, width, 10, { isStatic: true }), // Bottom wall
-            Bodies.rectangle(0, height / 2, 10, height, { isStatic: true }), // Left wall
-            Bodies.rectangle(width, height / 2, 10, height, { isStatic: true }) // Right wall
-        ];
-        World.add(world, walls);
-
-        // Simulate the Dynamic Island as an obstacle at the top
-        const dynamicIsland = Bodies.rectangle(width / 2, 50, width * 0.4, 20, {
-            isStatic: true,
-            render: { fillStyle: "gray" }
-        });
-        World.add(world, dynamicIsland);
-
-        // Create balls
-        let balls = [];
-        function dropBalls() {
-            for (let i = 0; i < 30; i++) {
-                let ball = Bodies.circle(width / 2, 10, 5, {
-                    restitution: 0.6,
-                    friction: 0.05,
-                    render: { fillStyle: "yellow" }
-                });
-                balls.push(ball);
-                World.add(world, ball);
-            }
+    const render = Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            wireframes: false,
+            background: "black"
         }
-        setTimeout(dropBalls, 1000); // Delay drop to simulate falling from top
+    });
 
-        // Handle device motion
-        window.addEventListener("devicemotion", (event) => {
-            const acceleration = event.accelerationIncludingGravity;
-            if (acceleration) {
-                engine.world.gravity.x = acceleration.x / 5;  // Adjust gravity based on tilt
-                engine.world.gravity.y = acceleration.y / 5;  // Adjust gravity based on phone movement
-            }
-        });
+    Render.run(render);
+    const runner = Runner.create();
+    Runner.run(runner, engine);
 
-        // Resize canvas on window resize
-        window.addEventListener("resize", () => {
-            render.canvas.width = window.innerWidth;
-            render.canvas.height = window.innerHeight;
-        });
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const walls = [
+        Bodies.rectangle(width / 2, height, width, 10, { isStatic: true }),
+        Bodies.rectangle(0, height / 2, 10, height, { isStatic: true }),
+        Bodies.rectangle(width, height / 2, 10, height, { isStatic: true })
+    ];
+    World.add(world, walls);
+
+    const dynamicIsland = Bodies.rectangle(width / 2, 50, width * 0.4, 20, {
+        isStatic: true,
+        render: { fillStyle: "gray" }
+    });
+    World.add(world, dynamicIsland);
+
+    let balls = [];
+    function dropBalls() {
+        for (let i = 0; i < 30; i++) {
+            let ball = Bodies.circle(width / 2, 10, 5, {
+                restitution: 0.6,
+                friction: 0.05,
+                render: { fillStyle: "yellow" }
+            });
+            balls.push(ball);
+            World.add(world, ball);
+        }
+    }
+    setTimeout(dropBalls, 1000);
+
+    function handleMotionEvent(event) {
+        const acceleration = event.accelerationIncludingGravity;
+        if (acceleration) {
+            engine.world.gravity.x = acceleration.x / 5;
+            engine.world.gravity.y = acceleration.y / 5;
+        }
+    }
+
+    // Request motion sensor permission (for iOS 13+)
+    function requestMotionPermission() {
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+            DeviceMotionEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === "granted") {
+                        window.addEventListener("devicemotion", handleMotionEvent);
+                    } else {
+                        alert("Motion permission denied. Enable it in settings.");
+                    }
+                })
+                .catch(console.error);
+        } else {
+            window.addEventListener("devicemotion", handleMotionEvent);
+        }
+    }
+
+    // Call permission request on user interaction
+    document.body.addEventListener("click", requestMotionPermission);
 
     </script>
 </body>
